@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  db:
+    build: ./contents/mysql
+    container_name: base_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: blog
+      MYSQL_USER: blog
+      MYSQL_PASSWORD: blog
+      TZ: 'Asia/Tokyo'
+    command: --innodb-use-native-aio=0
+    volumes:
+      - ./cache/db/ :/var/lib/mysql
+      - ./contents/mysql/conf.d :/etc/mysql/conf.d/
+      - ./log/mysql :/var/log/mysql
+    ports:
+      - 33306:3306
+    
+  # phpMyAdmin
+  phpmyadmin:
+    container_name: base_phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=base_mysql
+      - PMA_USER=blog
+      - PMA_PASSWORD=blog
+    ports:
+      - 8080:80
