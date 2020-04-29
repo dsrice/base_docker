@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  db:
+  base_db:
     build: ./contents/mysql
     container_name: base_mysql
     restart: always
@@ -19,6 +19,20 @@ services:
     ports:
       - 33306:3306
     
+  api:
+    build: ./contents/api
+    container_name: base-api
+    restart: always
+    ports:
+      - "8000:8000"
+    command: sh -c "sleep 5; python baseapi/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - "../base-django :/base-api"
+      - "./contents/server :/code" 
+    depends_on:
+      - base_db
+    tty: true
+        
   # phpMyAdmin
   phpmyadmin:
     container_name: base_phpmyadmin
