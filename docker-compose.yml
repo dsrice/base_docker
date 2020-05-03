@@ -19,6 +19,16 @@ services:
     ports:
       - 33306:3306
     
+  front:
+    build: ./contents/front
+    container_name: base-front
+    ports:
+      - "4200:4200"
+    command: ng serve --host=0.0.0.0
+    volumes:
+      - "../base-angular/front :/basefront"
+    tty: true
+        
   api:
     build: ./contents/api
     container_name: base-api
